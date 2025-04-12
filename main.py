@@ -3,25 +3,113 @@ import requests
 import json
 from datetime import datetime
 
-# Set page config
-st.set_page_config(page_title="ETA Calculator", layout="centered")
+# Set page config for full-width layout
+st.set_page_config(
+    page_title="🚀 Advanced ETA Calculator",
+    page_icon="🚗",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
-# Custom CSS for better styling
+# Custom CSS for modern styling
 st.markdown("""
 <style>
-    .big-font {
-        font-size: 20px !important;
+    /* Main container */
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
-    .result-box {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 15px;
-        margin-top: 20px;
-        background-color: #f9f9f9;
+
+    /* Headers */
+    h1, h2, h3 {
+        color: #2a3f5f !important;
     }
-    .highlight {
-        color: #2e86de;
-        font-weight: bold;
+
+    /* Cards */
+    .metric-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px 15px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        text-align: center;
+        border-left: 5px solid #4e73df;
+        transition: transform 0.3s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Metric values */
+    .metric-value {
+        font-size: 2.2rem !important;
+        font-weight: 700 !important;
+        color: #4e73df !important;
+        margin-bottom: 5px !important;
+    }
+
+    /* Metric labels */
+    .metric-label {
+        font-size: 1rem !important;
+        color: #6c757d !important;
+        font-weight: 500 !important;
+    }
+
+    /* Buttons */
+    .stButton>button {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        padding: 12px 24px !important;
+        border: none !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+    }
+
+    /* Input fields */
+    .stTextInput>div>div>input {
+        border-radius: 8px !important;
+        padding: 10px 15px !important;
+    }
+
+    /* Progress bar */
+    .stProgress>div>div>div {
+        background: linear-gradient(90deg, #4e73df 0%, #224abe 100%) !important;
+    }
+
+    /* Expander */
+    .stExpander {
+        background: white !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Info boxes */
+    .info-box {
+        background: rgba(78, 115, 223, 0.1) !important;
+        border-radius: 8px !important;
+        padding: 20px !important;
+        border-left: 5px solid #4e73df !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Divider */
+    .stDivider {
+        margin: 30px 0 !important;
+    }
+
+    /* Responsive columns */
+    @media (max-width: 768px) {
+        .metric-card {
+            margin-bottom: 15px;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -29,39 +117,52 @@ st.markdown("""
 # API endpoint
 API_URL = "https://00af-2401-4900-6403-4591-5929-c28-9e1c-17f5.ngrok-free.app/api/calculate_eta"
 
-# App title
-st.title("🚗 Travel Time Calculator")
-st.markdown("Get accurate ETAs based on current traffic conditions")
+# Main header
+st.markdown("""
+<div style="text-align: center; margin-bottom: 40px;">
+    <h1 style="font-size: 2.8rem; color: #2a3f5f; margin-bottom: 10px;">🚀 Advanced ETA Calculator</h1>
+    <p style="font-size: 1.1rem; color: #6c757d;">Get precise travel time estimates with real-time traffic analysis</p>
+</div>
+""", unsafe_allow_html=True)
 
-# Input form
-with st.form("eta_form"):
-    col1, col2 = st.columns(2)
-    with col1:
-        pickup = st.text_input("Pickup Location", placeholder="e.g., Indiranagar")
-    with col2:
-        drop = st.text_input("Drop Location", placeholder="e.g., Whitefield")
+# Create two columns for input form
+col1, col2 = st.columns([1, 1], gap="large")
 
-    # Optional day/hour selection
-    with st.expander("Advanced Options"):
-        day_input = st.selectbox(
-            "Day of Week",
-            options=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-            index=datetime.today().weekday() if datetime.today().weekday() < 7 else 0
-        )
-        hour_input = st.selectbox(
-            "Hour of Day",
-            options=[f"{i:02d}" for i in range(24)],
-            index=datetime.now().hour
-        )
+with col1:
+    # Input form in a card-like container
+    with st.container():
+        st.markdown("""
+        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 6px 18px rgba(0,0,0,0.1);">
+            <h2 style="color: #2a3f5f; margin-bottom: 20px;">📍 Trip Details</h2>
+        """, unsafe_allow_html=True)
 
-    submitted = st.form_submit_button("Calculate ETA")
+        with st.form("eta_form"):
+            pickup = st.text_input("Pickup Location", placeholder="e.g., Indiranagar, Bangalore")
+            drop = st.text_input("Drop Location", placeholder="e.g., Whitefield, Bangalore")
+
+            # Advanced options in expander
+            with st.expander("⚙️ Advanced Settings", expanded=False):
+                day_input = st.selectbox(
+                    "Day of Week",
+                    options=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                    index=datetime.today().weekday() if datetime.today().weekday() < 7 else 0
+                )
+                hour_input = st.selectbox(
+                    "Hour of Day",
+                    options=[f"{i:02d}" for i in range(24)],
+                    index=datetime.now().hour
+                )
+
+            submitted = st.form_submit_button("🚀 Calculate ETA", use_container_width=True)
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # Handle form submission
 if submitted:
     if not pickup or not drop:
         st.warning("Please enter both pickup and drop locations")
     else:
-        with st.spinner("Calculating best route..."):
+        with st.spinner("🚦 Analyzing traffic patterns..."):
             try:
                 # Prepare payload
                 payload = {
@@ -80,46 +181,111 @@ if submitted:
                     if data['success']:
                         result = data['data']
 
-                        # Display results in a clean layout
-                        with st.container():
-                            st.markdown("### 📊 Journey Details")
+                        with col2:
+                            # Display results in a beautiful card layout
+                            with st.container():
+                                st.markdown("""
+                                <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 6px 18px rgba(0,0,0,0.1);">
+                                    <h2 style="color: #2a3f5f; margin-bottom: 20px;">📊 Journey Analysis</h2>
+                                """, unsafe_allow_html=True)
 
-                            col1, col2, col3 = st.columns(3)
-                            with col1:
-                                st.metric("Standard ETA", result['eta'])
-                            with col2:
-                                st.metric("Adjusted ETA", f"{result['adjusted_eta']} min")
-                            with col3:
-                                st.metric("Distance", result['distance'])
+                                # Metrics in a grid
+                                m1, m2, m3 = st.columns(3)
+                                with m1:
+                                    st.markdown(f"""
+                                    <div class="metric-card">
+                                        <div class="metric-value">{result['eta']}</div>
+                                        <div class="metric-label">Standard ETA</div>
+                                    </div>
+                                    """, unsafe_allow_html=True)
 
-                            st.divider()
+                                with m2:
+                                    st.markdown(f"""
+                                    <div class="metric-card">
+                                        <div class="metric-value">{result['adjusted_eta']} min</div>
+                                        <div class="metric-label">Adjusted ETA</div>
+                                    </div>
+                                    """, unsafe_allow_html=True)
 
-                            st.markdown("#### Route Information")
-                            st.info(result['route_info'])
+                                with m3:
+                                    st.markdown(f"""
+                                    <div class="metric-card">
+                                        <div class="metric-value">{result['distance']}</div>
+                                        <div class="metric-label">Distance</div>
+                                    </div>
+                                    """, unsafe_allow_html=True)
 
-                            st.markdown("#### Traffic Details")
-                            st.progress(min(result['traffic_multiplier'] / 3, 1.0))
-                            st.caption(f"Traffic multiplier: {result['traffic_multiplier']:.2f}x")
+                                # Traffic visualization
+                                st.markdown("""
+                                <div style="margin: 25px 0;">
+                                    <h4 style="color: #2a3f5f; margin-bottom: 10px;">🚦 Traffic Conditions</h4>
+                                """, unsafe_allow_html=True)
 
-                            # Show raw JSON in expander
-                            with st.expander("View Raw API Response"):
-                                st.json(data)
+                                # Progress bar with custom styling
+                                progress_html = f"""
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span>Traffic Intensity</span>
+                                        <span>{result['traffic_multiplier']:.2f}x</span>
+                                    </div>
+                                    <div style="height: 10px; background: #e9ecef; border-radius: 5px; overflow: hidden;">
+                                        <div style="height: 100%; width: {min(result['traffic_multiplier'] / 3 * 100, 100)}%; 
+                                            background: linear-gradient(90deg, #4e73df 0%, #224abe 100%);"></div>
+                                    </div>
+                                </div>
+                                """
+                                st.markdown(progress_html, unsafe_allow_html=True)
+
+                                # Route information
+                                st.markdown("""
+                                <div style="margin: 25px 0;">
+                                    <h4 style="color: #2a3f5f; margin-bottom: 10px;">🗺 Route Information</h4>
+                                    <div class="info-box">
+                                        {route_info}
+                                    </div>
+                                </div>
+                                """.format(route_info=result['route_info']), unsafe_allow_html=True)
+
+                                # Raw JSON in expander
+                                with st.expander("🔍 View Raw API Response"):
+                                    st.json(data)
+
+                                st.markdown("</div>", unsafe_allow_html=True)
                     else:
-                        st.error(f"API Error: {data.get('error', 'Unknown error')}")
+                        st.error(f"🚨 API Error: {data.get('error', 'Unknown error')}")
                 else:
-                    st.error(f"API Request Failed (Status {response.status_code})")
-                    st.json(response.json())
+                    st.error(f"🚨 API Request Failed (Status {response.status_code})")
+                    with st.expander("Show Error Details"):
+                        st.json(response.json())
 
             except requests.exceptions.RequestException as e:
-                st.error(f"Connection Error: {str(e)}")
+                st.error(f"🌐 Connection Error: {str(e)}")
             except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
+                st.error(f"⚠️ An unexpected error occurred: {str(e)}")
 
-# Add some instructions
-st.markdown("---")
+# Add some instructions in the sidebar
+with st.sidebar:
+    st.markdown("""
+    <div style="padding: 20px;">
+        <h2 style="color: #2a3f5f;">ℹ️ How to Use</h2>
+        <ol style="color: #6c757d; padding-left: 20px;">
+            <li style="margin-bottom: 10px;">Enter pickup & drop locations</li>
+            <li style="margin-bottom: 10px;">Adjust day/time if needed</li>
+            <li style="margin-bottom: 10px;">Click "Calculate ETA"</li>
+            <li>View detailed traffic analysis</li>
+        </ol>
+
+        <div style="margin-top: 30px; padding: 15px; background: rgba(78, 115, 223, 0.1); border-radius: 8px;">
+            <p style="font-weight: 600; color: #2a3f5f;">💡 Pro Tip:</p>
+            <p style="color: #6c757d;">Use the advanced settings to see how traffic varies by time of day and week.</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Footer
 st.markdown("""
-**How to use:**
-1. Enter your pickup and drop locations
-2. Optionally adjust day/time for traffic predictions
-3. Click 'Calculate ETA' to get your journey details
-""")
+<div style="text-align: center; margin-top: 50px; padding: 20px; color: #6c757d;">
+    <hr style="border-top: 1px solid #e9ecef; margin-bottom: 15px;">
+    <p>Powered by Streamlit • Real-time Traffic Analysis</p>
+</div>
+""", unsafe_allow_html=True)
