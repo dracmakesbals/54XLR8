@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#FF6B35"              # Bright orange
+backgroundColor = "#001F3F"           # Deep navy blue
+secondaryBackgroundColor = "#003366" # Darker blue for contrast
+textColor = "#FFFFFF"                 # Clean white text
+font = "sans serif"
