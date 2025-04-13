@@ -27,7 +27,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # API endpoint
-API_URL = "https://00af-2401-4900-6403-4591-5929-c28-9e1c-17f5.ngrok-free.app/api/calculate_eta"
+API_URL = "your api here"
 
 # App title
 st.title("🚗 Travel Time Calculator")
