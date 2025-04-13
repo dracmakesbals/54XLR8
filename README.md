@@ -24,7 +24,7 @@ pip install streamlit requests
 ## Usage
 Run the application:
 ```bash
-streamlit run eta_calculator.
+streamlit run main.py.
 ```
 ## Configuration
 Edit these variables in the code:
