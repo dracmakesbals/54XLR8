@@ -1,4 +1,4 @@
-# 🚗 Streamlit ETA Calculator
+#ETA Calculator
 ## Features
 - ✨ **Modern UI** with gradient background and card-based design
 - 📍 **Location input** for pickup and drop points
