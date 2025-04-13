@@ -31,12 +31,6 @@ Edit these variables in the code:
 ```bash
 API_URL = "your_api_endpoint_here"
 ```
-## Project Structure
-```bash
-eta-calculator/
-├── eta_calculator.py
-└── README.md
-```
 ## How It Works
 1. User enters pickup and drop locations
 2. Optionally adjusts day/time parameters
